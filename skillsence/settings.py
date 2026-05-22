@@ -57,6 +57,7 @@ def _env_list(name, default=None):
 
 def _with_railway_hosts(hosts):
     resolved_hosts = list(hosts)
+    resolved_hosts.append("skillsence.hrutinnammi.in")
     railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
     if railway_domain:
         resolved_hosts.append(railway_domain)
@@ -68,6 +69,7 @@ def _with_railway_hosts(hosts):
 
 def _with_railway_origins(origins):
     resolved_origins = list(origins)
+    resolved_origins.append("https://skillsence.hrutinnammi.in")
     railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
     if railway_domain:
         resolved_origins.append(f"https://{railway_domain}")
