@@ -55,6 +55,25 @@ def _env_list(name, default=None):
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
+def _with_railway_hosts(hosts):
+    resolved_hosts = list(hosts)
+    railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
+    if railway_domain:
+        resolved_hosts.append(railway_domain)
+    if any(key.startswith("RAILWAY_") for key in os.environ):
+        resolved_hosts.append(".up.railway.app")
+        resolved_hosts.append(".railway.app")
+    return list(dict.fromkeys(resolved_hosts))
+
+
+def _with_railway_origins(origins):
+    resolved_origins = list(origins)
+    railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
+    if railway_domain:
+        resolved_origins.append(f"https://{railway_domain}")
+    return list(dict.fromkeys(resolved_origins))
+
+
 def _env_int(name, default=0):
     value = os.environ.get(name)
     if value is None:
@@ -132,20 +151,24 @@ if not SECRET_KEY:
         raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is false.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ALLOWED_HOSTS = _env_list(
-    "DJANGO_ALLOWED_HOSTS",
-    ["127.0.0.1", "localhost", "testserver"] if DEBUG else ["testserver"],
+ALLOWED_HOSTS = _with_railway_hosts(
+    _env_list(
+        "DJANGO_ALLOWED_HOSTS",
+        ["127.0.0.1", "localhost", "testserver"] if DEBUG else ["testserver"],
+    )
 )
 
 CORS_ALLOW_ALL_ORIGINS = _env_bool("DJANGO_CORS_ALLOW_ALL", False)
-CORS_ALLOWED_ORIGINS = _env_list(
-    "DJANGO_CORS_ALLOWED_ORIGINS",
-    [
-        "http://127.0.0.1:8080",
-        "http://localhost:8080",
-        "http://127.0.0.1:5173",
-        "http://localhost:5173",
-    ] if DEBUG else [],
+CORS_ALLOWED_ORIGINS = _with_railway_origins(
+    _env_list(
+        "DJANGO_CORS_ALLOWED_ORIGINS",
+        [
+            "http://127.0.0.1:8080",
+            "http://localhost:8080",
+            "http://127.0.0.1:5173",
+            "http://localhost:5173",
+        ] if DEBUG else [],
+    )
 )
 CSRF_TRUSTED_ORIGINS = _env_list("DJANGO_CSRF_TRUSTED_ORIGINS", CORS_ALLOWED_ORIGINS)
 SECURE_SSL_REDIRECT = _env_bool("DJANGO_SECURE_SSL_REDIRECT", not DEBUG)
@@ -218,6 +241,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'skillsence.wsgi.application'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.security.DisallowedHost": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
 
 
 # Database
