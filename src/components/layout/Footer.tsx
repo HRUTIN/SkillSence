@@ -124,16 +124,7 @@ export function Footer() {
 
         <div className="pt-4 text-center">
           <p className="text-sm text-muted-foreground">
-            Made by{' '}
-            <a
-              href="https://tarunkomati.in"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium text-foreground transition-colors hover:text-primary"
-            >
-              Tarun Komati
-            </a>{' '}
-            &amp; Team
+            Made by <span className="font-medium text-foreground">HRUTIN NAMMI</span> &amp; Team
           </p>
         </div>
       </div>

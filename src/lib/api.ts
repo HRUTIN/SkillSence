@@ -22,14 +22,17 @@ const runtimeIsLocal =
   ['127.0.0.1', 'localhost'].includes(runtimeUrl.hostname);
 const servedByBackend =
   runtimeUrl !== null && runtimeUrl.port !== '8080' && runtimeUrl.port !== '5173';
+const shouldUseRuntimeOrigin =
+  configuredIsLocal &&
+  runtimeUrl !== null &&
+  configuredUrl !== null &&
+  (
+    !runtimeIsLocal ||
+    (servedByBackend && configuredUrl.origin !== runtimeUrl.origin)
+  );
 
 export const apiBase =
-  configuredIsLocal &&
-  runtimeIsLocal &&
-  servedByBackend &&
-  configuredUrl !== null &&
-  runtimeUrl !== null &&
-  configuredUrl.origin !== runtimeUrl.origin
+  shouldUseRuntimeOrigin
     ? runtimeOrigin
     : configuredBase || runtimeOrigin;
 
