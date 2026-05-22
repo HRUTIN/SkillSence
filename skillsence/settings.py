@@ -190,6 +190,15 @@ SESSION_COOKIE_SAMESITE = os.environ.get("DJANGO_SESSION_COOKIE_SAMESITE", "Lax"
 CSRF_COOKIE_SAMESITE = os.environ.get("DJANGO_CSRF_COOKIE_SAMESITE", "Lax")
 X_FRAME_OPTIONS = os.environ.get("DJANGO_X_FRAME_OPTIONS", "DENY")
 
+if not DEBUG:
+    print(
+        "Django production hosts: "
+        f"ALLOWED_HOSTS={ALLOWED_HOSTS}; "
+        f"CSRF_TRUSTED_ORIGINS={CSRF_TRUSTED_ORIGINS}; "
+        f"RAILWAY_PUBLIC_DOMAIN={os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')}",
+        flush=True,
+    )
+
 
 # Application definition
 
