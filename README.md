@@ -25,6 +25,17 @@ SkillSense AI brings resume parsing, GitHub-backed engineering analysis, AI inte
 - Export-ready PDFs for score reports, skill passports, recruiter summaries, and resumes
 - In-app approval console for recruiter and university onboarding
 
+## Screenshots
+
+Add product screenshots in the `images/` directory before pinning this repo:
+
+```text
+images/student-dashboard.png
+images/ai-interview.png
+images/recruiter-dashboard.png
+images/university-analytics.png
+```
+
 ## Experience Map
 
 | Audience | What they get |
